@@ -34,6 +34,24 @@ object RecyclerViewBinding {
     }
   }
 
+
+  @BindingAdapter("submitList")
+  @JvmStatic
+  fun RecyclerView.bindAdapter(itemList: List<Pokemon>?){
+
+    // 어댑터 최초 연결
+    if(this.adapter == null) {
+      val adapter = PokemonAdapter()
+      this.adapter = adapter
+    }
+
+    val myAdapter = this.adapter as PokemonAdapter
+
+    // 자동 갱신
+    myAdapter.submitList(itemList?.toMutableList())
+  }
+
+/*
   @JvmStatic
   @BindingAdapter("submitList")
   fun bindSubmitList(view: RecyclerView, itemList: List<Pokemon>?) {
@@ -48,7 +66,7 @@ object RecyclerViewBinding {
     // 자동 갱신
     pokemonAdapter.submitList(itemList)
   }
-
+*/
 /*  @JvmStatic
   @BindingAdapter("paginationPokemonList")
   fun paginationPokemonList(view: RecyclerView, viewModel: MainViewModel) {

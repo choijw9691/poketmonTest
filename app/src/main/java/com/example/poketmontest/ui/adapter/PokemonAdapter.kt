@@ -19,6 +19,7 @@ package com.example.poketmontest.ui.adapter
 import android.os.SystemClock
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -74,4 +75,6 @@ class PokemonAdapter : ListAdapter<Pokemon,PokemonAdapter.PokemonViewHolder>(dif
         oldItem == newItem
     }
   }
+
+
 }

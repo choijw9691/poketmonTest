@@ -20,6 +20,7 @@ import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.Typeface
 import android.graphics.drawable.Drawable
+import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.view.WindowManager
@@ -30,9 +31,13 @@ import androidx.appcompat.widget.AppCompatImageView
 import androidx.databinding.BindingAdapter
 import androidx.palette.graphics.Palette
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.BitmapImageViewTarget
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.target.SimpleTarget
+import com.bumptech.glide.request.target.Target
 import com.bumptech.glide.request.transition.Transition
 import com.google.android.material.card.MaterialCardView
 
@@ -51,18 +56,35 @@ object ViewBinding {
     fun bindLoadImagePalette(view: AppCompatImageView, url: String, paletteCard: MaterialCardView) {
         Glide.with(view.context).asBitmap()
             .load(url)
-            .into(object : CustomTarget<Bitmap>() {
-                override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
-                    var palette = Palette.from(resource).generate()
-                    val rgb = palette?.dominantSwatch?.rgb
-                    if (rgb != null) {
-                        paletteCard.setCardBackgroundColor(rgb)
-                    }
-                }
-                override fun onLoadCleared(placeholder: Drawable?) {
-                }
+            .listener(
+                object : RequestListener<Bitmap> {
 
-            })
+                    override fun onResourceReady(
+                        resource: Bitmap?,
+                        model: Any?,
+                        target: Target<Bitmap>?,
+                        dataSource: DataSource?,
+                        isFirstResource: Boolean
+                    ): Boolean {
+                        var palette = resource?.let { Palette.from(it).generate() }
+                        val rgb = palette?.dominantSwatch?.rgb
+                        if (rgb != null) {
+                            Log.d("JIWOUNG","ImageTest: "+url)
+                            paletteCard.setCardBackgroundColor(rgb)
+                        }
+                    return false
+                    }
+
+                    override fun onLoadFailed(
+                        e: GlideException?,
+                        model: Any?,
+                        target: Target<Bitmap>?,
+                        isFirstResource: Boolean
+                    ): Boolean {
+                        return false
+                    }
+                })
+            .into(view)
     }
 /*
   @JvmStatic
